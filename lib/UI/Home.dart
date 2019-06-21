@@ -28,7 +28,17 @@ class HomeState extends State<Home> {
         icon: Icon(Icons.assessment), title: Text("记录")));
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text(''),
+        title: new Text('WorkNote'),
+        actions: <Widget>[
+          IconButton(icon: Icon(Icons.search), onPressed: () {
+            showCupertinoModalPopup(context: context, builder: (BuildContext context){
+              return Container(
+                height: 200,
+                color: Colors.white,
+              );
+            });
+          }),
+        ],
       ),
       body: PageView.builder(
         onPageChanged: _pageChange,

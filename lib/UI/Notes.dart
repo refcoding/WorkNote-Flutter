@@ -13,9 +13,7 @@ class NotesState extends State<Notes> with AutomaticKeepAliveClientMixin{
     return ListView.builder(
       itemCount: items.length,
       itemBuilder: (context, index) {
-        return new ListTile(
-          title: new Text('${items[index]}'),
-        );
+        return Container(height: 100,child: Text("item ${items[index]}"),);
       },
     );
   }
