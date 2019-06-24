@@ -26,9 +26,9 @@ class HomeState extends State<Home> {
         BottomNavigationBarItem(icon: Icon(Icons.check), title: Text("打卡")));
     bottomItems.add(BottomNavigationBarItem(
         icon: Icon(Icons.assessment), title: Text("记录")));
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text('WorkNote'),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('WorkNote'),
         actions: <Widget>[
           IconButton(icon: Icon(Icons.search), onPressed: () {
             showCupertinoModalPopup(context: context, builder: (BuildContext context){
@@ -54,8 +54,8 @@ class HomeState extends State<Home> {
         onTap: (int index) {
           //_pageController.jumpToPage(index); 没有动画的页面切换
           _pageController.animateToPage(index,
-              duration: new Duration(seconds: 2),
-              curve: new ElasticOutCurve(0.8));
+              duration: Duration(seconds: 2),
+              curve: ElasticOutCurve(0.8));
           _pageChange(index);
         },
       ),

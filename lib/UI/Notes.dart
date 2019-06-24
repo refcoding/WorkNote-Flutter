@@ -7,7 +7,7 @@ class Notes extends StatefulWidget {
 }
 
 class NotesState extends State<Notes> with AutomaticKeepAliveClientMixin{
-  final items = new List<String>.generate(10000, (i) => "Item $i");
+  final items = List<String>.generate(10000, (i) => "Item $i");
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
