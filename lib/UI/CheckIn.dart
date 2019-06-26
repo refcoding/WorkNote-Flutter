@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:worknote/Model/WorkNoteModel.dart';
 
 class CheckIn extends StatefulWidget {
   @override
@@ -7,14 +8,29 @@ class CheckIn extends StatefulWidget {
 }
 
 class CheckInState extends State<CheckIn> with AutomaticKeepAliveClientMixin {
+  WorkNote mWorkNote;
+  var todoProvider = TodoProvider();
+
+
   @override
   Widget build(BuildContext context) {
+
     return Column(
       children: <Widget>[
         Expanded(
             child: Center(
           child: RaisedButton(
-            onPressed: (){},
+            onPressed: () {
+              todoProvider.open().then((version) {
+                todoProvider.gotoWork().then((id) {
+                  print(id);
+                }, onError: (e) {
+                  print("go to work error");
+                });
+              }, onError: (e) {
+                print("open db error");
+              });
+            },
             padding: EdgeInsets.all(30.0),
             child: Text("上班"),
             color: Colors.red,
@@ -26,7 +42,17 @@ class CheckInState extends State<CheckIn> with AutomaticKeepAliveClientMixin {
         Expanded(
             child: Center(
           child: RaisedButton(
-            onPressed: (){},
+            onPressed: () {
+              TodoProvider().open().then((version) {
+                todoProvider.offWork().then((id) {
+                  print(id);
+                }, onError: (e) {
+                  print("off work error");
+                });
+              }, onError: (e) {
+                print("open db error");
+              });
+            },
             padding: EdgeInsets.all(30.0),
             child: Text("下班"),
             color: Colors.red,
@@ -40,8 +66,18 @@ class CheckInState extends State<CheckIn> with AutomaticKeepAliveClientMixin {
 //          color: Colors.red,
           child: Column(
             children: <Widget>[
-              Expanded(child: Center(child: Text("上班时间：未打卡"),)),
-              Expanded(child: Center(child: Text("下班时间：未打卡"),)),
+              Expanded(
+                  child: Center(
+                child: Text("上班时间：${mWorkNote?.goToTime == null? "未签到":mWorkNote.goToTime}"),
+              )),
+              Expanded(
+                  child: Center(
+                child: Text("下班时间：${mWorkNote?.offTime == null? "未签到":mWorkNote.offTime}"),
+              )),
+              Expanded(
+                  child: Center(
+                child: Text("累计时长：${timeCutResult(mWorkNote?.goToTime, mWorkNote?.offTime)}"),
+              )),
             ],
           ),
         )
@@ -53,6 +89,21 @@ class CheckInState extends State<CheckIn> with AutomaticKeepAliveClientMixin {
   void initState() {
     // TODO: implement initState
     super.initState();
+    ref();
+  }
+
+  void ref(){
+    todoProvider.open().then((version) {
+      todoProvider.getToday().then((workNote) {
+        setState(() {
+          mWorkNote = workNote;
+        });
+      }, onError: (e) {
+        print("get today workNote error");
+      });
+    }, onError: (e) {
+      print("open db error");
+    });
   }
 
   @override
