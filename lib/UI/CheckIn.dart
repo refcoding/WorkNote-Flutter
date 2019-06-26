@@ -4,17 +4,18 @@ import 'package:worknote/Model/WorkNoteModel.dart';
 
 class CheckIn extends StatefulWidget {
   @override
-  CheckInState createState() => new CheckInState();
+  CheckInState createState() => CheckInState();
 }
 
 class CheckInState extends State<CheckIn> with AutomaticKeepAliveClientMixin {
   WorkNote mWorkNote;
   var todoProvider = TodoProvider();
 
+  BuildContext mContext;
 
   @override
   Widget build(BuildContext context) {
-
+    mContext = context;
     return Column(
       children: <Widget>[
         Expanded(
@@ -24,6 +25,12 @@ class CheckInState extends State<CheckIn> with AutomaticKeepAliveClientMixin {
               todoProvider.open().then((version) {
                 todoProvider.gotoWork().then((id) {
                   print(id);
+                  if (id > 0) {
+                    showSnack("成功", Colors.green);
+                    ref();
+                  } else {
+                    showSnack("失败", Colors.red);
+                  }
                 }, onError: (e) {
                   print("go to work error");
                 });
@@ -45,7 +52,12 @@ class CheckInState extends State<CheckIn> with AutomaticKeepAliveClientMixin {
             onPressed: () {
               TodoProvider().open().then((version) {
                 todoProvider.offWork().then((id) {
-                  print(id);
+                  if (id > 0) {
+                    showSnack("成功", Colors.green);
+                    ref();
+                  } else {
+                    showSnack("失败", Colors.red);
+                  }
                 }, onError: (e) {
                   print("off work error");
                 });
@@ -68,15 +80,18 @@ class CheckInState extends State<CheckIn> with AutomaticKeepAliveClientMixin {
             children: <Widget>[
               Expanded(
                   child: Center(
-                child: Text("上班时间：${mWorkNote?.goToTime == null? "未签到":mWorkNote.goToTime}"),
+                child: Text(
+                    "上班时间：${mWorkNote?.goToTime == null ? "未签到" : mWorkNote.goToTime}"),
               )),
               Expanded(
                   child: Center(
-                child: Text("下班时间：${mWorkNote?.offTime == null? "未签到":mWorkNote.offTime}"),
+                child: Text(
+                    "下班时间：${mWorkNote?.offTime == null ? "未签到" : mWorkNote.offTime}"),
               )),
               Expanded(
                   child: Center(
-                child: Text("累计时长：${timeCutResult(mWorkNote?.goToTime, mWorkNote?.offTime)}"),
+                child: Text(
+                    "累计时长：${timeCutResult(mWorkNote?.goToTime, mWorkNote?.offTime)}"),
               )),
             ],
           ),
@@ -92,7 +107,7 @@ class CheckInState extends State<CheckIn> with AutomaticKeepAliveClientMixin {
     ref();
   }
 
-  void ref(){
+  void ref() {
     todoProvider.open().then((version) {
       todoProvider.getToday().then((workNote) {
         setState(() {
@@ -127,4 +142,13 @@ class CheckInState extends State<CheckIn> with AutomaticKeepAliveClientMixin {
   @override
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
+
+  void showSnack(String message, Color color) {
+    final snackBar = new SnackBar(
+      content: new Text(message),
+      duration: Duration(seconds: 1),
+      backgroundColor: color,
+    );
+    Scaffold.of(mContext).showSnackBar(snackBar);
+  }
 }
