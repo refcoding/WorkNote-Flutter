@@ -154,6 +154,12 @@ class TodoProvider {
         columnGotoTime: "${DateTime.now().hour}:${DateTime.now().minute}",
       });
     } else {
+      //今日已签到
+      if(maps.first[columnGotoTime] != null){
+
+        return -1;
+      }
+
       return await db.update(
           tableName,
           <String, dynamic>{
@@ -224,10 +230,27 @@ String timeCutResult(String v1, String v2){
     print(e);
   }
 
-  return "";
+  return "未完成";
 }
 
 String timeAddResult(String v1, String v2){
+  try{
+    var time1 = v1.split(":");
+    var time2 = v2.split(":");
+    int hours1 = int.parse(time1[0]);
+    int hours2 = int.parse(time2[0]);
 
+    int min1 = int.parse(time1[1]);
+    int min2 = int.parse(time2[1]);
+
+    if((min2 + min1) > 59){
+      return "${hours2+hours1+1}:${min2+min1-60}";
+    }else{
+      return "${hours2+hours1}:${min2-min1}";
+    }
+
+  }catch(e){
+    print(e);
+  }
   return "";
 }
