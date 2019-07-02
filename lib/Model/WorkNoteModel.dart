@@ -221,9 +221,9 @@ String timeCutResult(String v1, String v2){
     int min2 = int.parse(time2[1]);
 
     if(min2 < min1){
-      return "${hours2-hours1-1}小时${min2-min1+60}分";
+      return "${hours2-hours1 - 2}小时${min2 - min1 + 60}分";
     }else{
-      return "${hours2-hours1}小时${min2-min1}分";
+      return "${hours2-hours1 - 1}小时${min2 - min1}分";
     }
 
   }catch(e){
